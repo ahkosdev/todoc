@@ -1,5 +1,7 @@
 package com.cleanup.todoc.ui;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,12 +20,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.injection.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -88,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private TextView lblNoTasks;
 
+    private TaskViewModel mTaskViewModel;
+    private static int PROJECT_ID;
+    private Project mProject;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 showAddTaskDialog();
             }
         });
+
+        this.configureViewModel();
+        //this.getCurrentProject(PROJECT_ID);
+        this.getTacks(PROJECT_ID);
     }
 
     @Override
@@ -162,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             }
             // If both project and name of the task have been set
             else if (taskProject != null) {
+
                 // TODO: Replace this by id of persisted task
                 long id = (long) (Math.random() * 50000);
 
@@ -276,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                     @Override
                     public void onClick(View view) {
                         onPositiveButtonClick(dialog);
+                        //createTask();
                     }
                 });
             }
@@ -319,5 +334,33 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
          * No sort
          */
         NONE
+    }
+
+    private void configureViewModel(){
+
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        mTaskViewModel = ViewModelProviders.of(this,viewModelFactory).get(TaskViewModel.class);
+        mTaskViewModel.init( PROJECT_ID);
+    }
+
+    //private void getCurrentProject(int projectId){
+
+        //mTaskViewModel.getProject(projectId).observe(this, this::updateProject);
+    //}
+    private void getTacks(int projectId){
+        mTaskViewModel.getTasks(projectId).observe(this, this::updateTacksList);
+    }
+    private void createTask(){
+        Task task = new Task((long)(Math.random()*50000),dialogSpinner.getSelectedItemId(),dialogEditText.getText().toString(),new Date().getTime());
+        dialogEditText.setText("");
+        mTaskViewModel.createdTask(task);
+
+    }
+
+    //private void updateProject(Project project){
+        //dialogSpinner.getSelectedItem().toString();
+    //}
+    private void updateTacksList(List<Task> tasks){
+        adapter.updateTasks(tasks);
     }
 }

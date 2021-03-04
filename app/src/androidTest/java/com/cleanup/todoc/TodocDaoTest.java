@@ -70,19 +70,19 @@ public class TodocDaoTest {
         assertTrue(tasks.size()== 4);
     }
 
-    @Test
-    public void insertAndUpdateTaskWithSuccess() throws InterruptedException {
+    //@Test
+   // public void insertAndUpdateTaskWithSuccess() throws InterruptedException {
 
-        mDatabase.projectDao().creteProject(PROJECT_CAT);
-        mDatabase.taskDao().insertTask(ENTRETIEN);
-        Task taskUpdate = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID)).get(0);
-        taskUpdate.setSelected(true);
-        mDatabase.taskDao().updateTask(taskUpdate);
-        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID));
-        assertTrue(tasks.size()==1 && tasks.get(0).getSelected());
+       // mDatabase.projectDao().creteProject(PROJECT_CAT);
+       // mDatabase.taskDao().insertTask(ENTRETIEN);
+        //Task taskUpdate = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID)).get(0);
+        //taskUpdate.setSelected(true);
+       // mDatabase.taskDao().updateTask(taskUpdate);
+        //List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID));
+        //assertTrue(tasks.size()==1 && tasks.get(0).getSelected());
 
 
-    }
+   // }
 
     @Test
     public void insertAndDeleteTaskWithSuccess() throws InterruptedException {

@@ -38,7 +38,6 @@ public class Task {
      * The timestamp when the task has been created
      */
     private long creationTimestamp;
-    private boolean isSelected;
 
     /**
      * Instantiates a new Task.
@@ -53,7 +52,6 @@ public class Task {
         this.setProjectId(projectId);
         this.setName(name);
         this.setCreationTimestamp(creationTimestamp);
-        this.isSelected = false;
     }
 
     /**
@@ -128,15 +126,6 @@ public class Task {
     private void setCreationTimestamp(long creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
     }
-
-    public boolean getSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
     /**
      * Comparator to sort task from A to Z
      */

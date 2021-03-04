@@ -14,5 +14,5 @@ public interface ProjectDao {
     void creteProject(Project project);
 
     @Query("SELECT * FROM Project WHERE id = :projectId ")
-    LiveData<Project> getProject(Long projectId);
+    LiveData<Project> getProject(long projectId);
 }
