@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private final Project[] allExistProjects = Project.getAllProjects();
+    private final List<Project> allProjects = new ArrayList<>();
 
     /**
      * List of all current tasks of the application
@@ -94,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private TextView lblNoTasks;
 
     private TaskViewModel mTaskViewModel;
-    private static int PROJECT_ID;
-    private Project mProject;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
 
         this.configureViewModel();
-        //this.getCurrentProject(PROJECT_ID);
-        this.getTacks(PROJECT_ID);
+        this.getProjects();
+        this.getTacks();
     }
 
     @Override
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @Override
     public void onDeleteTask(Task task) {
         tasks.remove(task);
+        //mTaskViewModel.deleteTask(task.getId());
         updateTasks();
     }
 
@@ -187,7 +188,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                         new Date().getTime()
                 );
 
-                addTask(task);
+                //addTask(task);
+                mTaskViewModel.createdTask(task);
 
                 dialogInterface.dismiss();
             }
@@ -216,15 +218,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         populateDialogSpinner();
     }
 
-    /**
-     * Adds the given task to the list of created tasks.
-     *
-     * @param task the task to be added to the list
-     */
-    private void addTask(@NonNull Task task) {
-        tasks.add(task);
-        updateTasks();
-    }
+
 
     /**
      * Updates the list of tasks in the UI
@@ -303,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
+        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allExistProjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         if (dialogSpinner != null) {
             dialogSpinner.setAdapter(adapter);
@@ -340,27 +334,25 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         mTaskViewModel = ViewModelProviders.of(this,viewModelFactory).get(TaskViewModel.class);
-        mTaskViewModel.init( PROJECT_ID);
+        mTaskViewModel.init();
     }
 
-    //private void getCurrentProject(int projectId){
+    private void getProjects(){
 
-        //mTaskViewModel.getProject(projectId).observe(this, this::updateProject);
-    //}
-    private void getTacks(int projectId){
-        mTaskViewModel.getTasks(projectId).observe(this, this::updateTacksList);
+        mTaskViewModel.getProject().observe(this, this::updateProject);
     }
-    private void createTask(){
-        Task task = new Task((long)(Math.random()*50000),dialogSpinner.getSelectedItemId(),dialogEditText.getText().toString(),new Date().getTime());
-        dialogEditText.setText("");
-        mTaskViewModel.createdTask(task);
-
+    private void getTacks(){
+        mTaskViewModel.getTasks().observe(this, this::updateTacksList);
     }
 
-    //private void updateProject(Project project){
-        //dialogSpinner.getSelectedItem().toString();
-    //}
     private void updateTacksList(List<Task> tasks){
-        adapter.updateTasks(tasks);
+        this.tasks.clear();
+        this.tasks.addAll(tasks);
+        updateTasks();
+    }
+    private void updateProject(List<Project> projects){
+        this.allProjects.clear();
+        this.allProjects.addAll(projects);
+
     }
 }
