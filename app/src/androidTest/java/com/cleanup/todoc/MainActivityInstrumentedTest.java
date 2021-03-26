@@ -36,8 +36,8 @@ public class MainActivityInstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
-    @Before
-    public  void clean (){
+    @BeforeClass
+    public static void clean (){
         InstrumentationRegistry.getTargetContext().deleteDatabase("TodocDatabase.db");
     }
 
