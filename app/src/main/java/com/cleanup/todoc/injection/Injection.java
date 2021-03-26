@@ -21,6 +21,7 @@ public class Injection {
     public static Executor provideExecutor(){
         return Executors.newSingleThreadExecutor();
     }
+
     public static ViewModelFactory provideViewModelFactory(Context context){
         ProjectDataRepository dataSourceProject = provideProjectDataSource(context);
         TaskDataRepository dataSourceTask = provideTaskDataSource(context);

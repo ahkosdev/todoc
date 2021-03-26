@@ -46,14 +46,14 @@ public class TodocDaoTest {
 
         mDatabase.projectDao().creteProject(PROJECT_CAT);
 
-        Project project = LiveDataTestUtil.getValue(mDatabase.projectDao().getProject(CAT_PROJECT_ID));
-        assertTrue(project.getName().equals(PROJECT_CAT.getName())&& project.getId()== CAT_PROJECT_ID);
+       List<Project> projects = LiveDataTestUtil.getValue(mDatabase.projectDao().getProjects());
+        assertTrue(projects.get(0).getName().equals(PROJECT_CAT.getName())&& projects.get(0).getId()== CAT_PROJECT_ID);
 
     }
 
     @Test
     public void taskListIsEmpty() throws InterruptedException {
-        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID ));
+        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks());
         assertTrue(tasks.isEmpty());
     }
 
@@ -66,7 +66,7 @@ public class TodocDaoTest {
         mDatabase.taskDao().insertTask(CUISINE);
         mDatabase.taskDao().insertTask(ENTRETIEN_TOILETTE);
 
-        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID ));
+        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks());
         assertTrue(tasks.size()== 4);
     }
 
@@ -90,9 +90,9 @@ public class TodocDaoTest {
         mDatabase.projectDao().creteProject(PROJECT_CAT);
         mDatabase.taskDao().insertTask(ENTRETIEN);
         mDatabase.taskDao().insertTask(CUISINE);
-        Task updateTask = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID)).get(1);
+        Task updateTask = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks()).get(1);
         mDatabase.taskDao().deleteTask(updateTask.getId());
-        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks(CAT_PROJECT_ID));
+        List<Task> tasks = LiveDataTestUtil.getValue(mDatabase.taskDao().getTasks());
         assertTrue(tasks.size()==1);
 
     }
